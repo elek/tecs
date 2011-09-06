@@ -1,0 +1,34 @@
+// This file is part of the materials accompanying the book 
+// "The Elements of Computing Systems" by Nisan and Schocken, 
+// MIT Press. Book site: www.idc.ac.il/tecs
+// File name: projects/01/Or8Way.hdl
+
+/**
+ * 8-way Or gate.  out = in[0] or in[1] or ... or in[7]
+ */
+ 
+CHIP Or16Way {
+
+    IN  in[16];
+    OUT out;
+
+    PARTS:
+    Or(a=in[0],b=in[1],out=q);
+    Or(a=in[2],b=in[3],out=w);
+    Or(a=in[4],b=in[5],out=e);
+    Or(a=in[6],b=in[7],out=r);
+    Or(a=in[8],b=in[9],out=t);
+    Or(a=in[10],b=in[1],out=y);
+    Or(a=in[12],b=in[13],out=u);
+    Or(a=in[14],b=in[15],out=i);
+    
+    Or(a=q,b=w,out=l);
+    Or(a=e,b=r,out=k);
+    Or(a=t,b=y,out=j);
+    Or(a=u,b=y,out=h);
+    
+    Or(a=l,b=k,out=m);
+    Or(a=j,b=h,out=n);
+    
+    Or(a=m,b=n,out=out);
+}

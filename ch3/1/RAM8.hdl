@@ -1,0 +1,52 @@
+// This file is part of the materials accompanying the book 
+// "The Elements of Computing Systems" by Nisan and Schocken, 
+// MIT Press. Book site: www.idc.ac.il/tecs
+// File name: projects/03/1/RAM8.hdl
+
+/**
+ * Memory of 8 registers, each 16-bit wide.  
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = RAM8[address(t)](t)
+ *     Write: If load(t-1) then RAM8[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory 
+ * location specified by address. If load=1, the in value is loaded 
+ * into the memory location specified by address.  This value becomes 
+ * available through the out output starting from the next time step.
+ */
+
+CHIP RAM8 {
+
+    IN  in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+    
+    DMux(in=load,sel=address[2],a=x1,b=x2);
+    
+    DMux(in=x1,sel=address[1],a=y1,b=y2);
+    DMux(in=x2,sel=address[1],a=y3,b=y4);
+    
+    DMux(in=y1,sel=address[0],a=z1,b=z2);
+    DMux(in=y2,sel=address[0],a=z3,b=z4);
+    DMux(in=y3,sel=address[0],a=z5,b=z6);
+    DMux(in=y4,sel=address[0],a=z7,b=z8);
+    
+    Register(in=in,load=z1,out=o1);
+    Register(in=in,load=z2,out=o2);
+    Register(in=in,load=z3,out=o3);
+    Register(in=in,load=z4,out=o4);
+    Register(in=in,load=z5,out=o5);
+    Register(in=in,load=z6,out=o6);
+    Register(in=in,load=z7,out=o7);
+    Register(in=in,load=z8,out=o8);
+        
+    Mux16(a=o1,b=o2,sel=address[0],out=p1);
+    Mux16(a=o3,b=o4,sel=address[0],out=p2);
+    Mux16(a=o5,b=o6,sel=address[0],out=p3);
+    Mux16(a=o7,b=o8,sel=address[0],out=p4);
+    
+    Mux16(a=p1,b=p2,sel=address[1],out=q1);
+    Mux16(a=p3,b=p4,sel=address[1],out=q2);
+    
+    Mux16(a=q1,b=q2,sel=address[2],out=out);
+}
